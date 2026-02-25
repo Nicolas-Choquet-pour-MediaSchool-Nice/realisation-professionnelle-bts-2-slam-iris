@@ -12,7 +12,7 @@
     }
 
     .stat-card {
-        background: white;
+        background: var(--card-bg);
         border-radius: 8px;
         padding: 20px;
         text-align: center;
@@ -55,17 +55,17 @@
     <div class="dashboard-grid">
         <a href="{{ path('app_dashboard_classes') }}" class="stat-card">
             <span class="stat-number">{{ nb_classes }}</span>
-            <span class="stat-label">classes gérées</span>
+            <span class="stat-label">classe{% if nb_classes > 1 %}s{% endif %} gérée{% if nb_classes > 1 %}s{% endif %}</span>
         </a>
 
         <a href="{{ path('app_dashboard_students') }}" class="stat-card">
             <span class="stat-number">{{ nb_students }}</span>
-            <span class="stat-label">étudiant{% if nb_students > 1 %}s{% endif %} au total</span>
+            <span class="stat-label">étudiant{% if nb_students > 1 %}s au total{% endif %}</span>
         </a>
 
         <a href="{{ path('app_dashboard_booking') }}" class="stat-card">
             <span class="stat-number">{{ nb_booking }}</span>
-            <span class="stat-label">réservations au total</span>
+            <span class="stat-label">réservation{% if nb_booking > 1 %}s au total{% endif %}</span>
         </a>
     </div>
 </div>
