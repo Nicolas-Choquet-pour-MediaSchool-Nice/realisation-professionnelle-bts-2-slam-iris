@@ -3,20 +3,52 @@
 {% block title %}Gestion des Réservations{% endblock %}
 
 {% block body %}
-<style>
-    body {
-        display: block!important;
-    }
+    <style>
+        body {
+            display: block!important;
+        }
 
-    nav, .card {
-        width: 100%;
-        max-width: 100%;
-    }
-</style>
+        nav, .card {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .filter-group .btn {
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+
+        .filter-group .btn:hover {
+            background-color: var(--dropdown-hover);
+        }
+
+        .filter-group .btn-primary {
+            color: #ffffff !important;
+        }
+    </style>
 <div class="container">
     <div class="header-section">
         <h1>Gestion des Réservations</h1>
-        <a href="{{ path('app_dashboard') }}" class="btn btn-outline">&larr; Retour au dashboard</a>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div class="filter-group" style="display: flex; background: var(--dropdown-bg); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <a href="{{ path('app_dashboard_booking', {status: 'all'}) }}"
+                   class="btn btn-sm {% if currentStatus == 'all' %}btn-primary{% endif %}"
+                   style="padding: 6px 12px; font-size: 0.85em; border-radius: 6px; text-decoration: none;">
+                   Toutes
+                </a>
+                <a href="{{ path('app_dashboard_booking', {status: 'active'}) }}"
+                   class="btn btn-sm {% if currentStatus == 'active' %}btn-primary{% endif %}"
+                   style="padding: 6px 12px; font-size: 0.85em; border-radius: 6px; text-decoration: none;">
+                   Actives
+                </a>
+                <a href="{{ path('app_dashboard_booking', {status: 'canceled'}) }}"
+                   class="btn btn-sm {% if currentStatus == 'canceled' %}btn-primary{% endif %}"
+                   style="padding: 6px 12px; font-size: 0.85em; border-radius: 6px; text-decoration: none;">
+                   Annulées
+                </a>
+            </div>
+            <a href="{{ path('app_dashboard') }}" class="btn btn-outline">&larr; Retour au dashboard</a>
+        </div>
     </div>
 
     <div class="card">
