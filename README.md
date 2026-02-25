@@ -1,7 +1,19 @@
 # realisation-professionnelle-bts-2-slam-iris
 Projet de réalisation professionnelle pour les BTS 2 SLAM IRIS réalisé par mes soins
 
-## Diagramme de Relation (ERD)
+## Installation du projet
+
+```bash
+git clone https://github.com/Nicolas-Choquet-pour-MediaSchool-Nice/realisation-professionnelle-bts-2-slam-iris.git
+cd realisation-professionnelle-bts-2-slam-iris
+# remplire le fichier .env au moins avec l'url de connexion à la bdd
+php bin/console doctrine:migration:migrate
+symfony server:start
+```
+
+## Diagrammes
+
+### Diagramme de Relation (ERD)
 
 ```mermaid
 erDiagram
@@ -68,7 +80,7 @@ erDiagram
     equipment ||--o{ equipment_room : "contient"
 ```
 
-## Diagramme d'activité Etudiant
+### Diagramme d'activité Etudiant
 
 ```mermaid
 flowchart TD
@@ -85,7 +97,7 @@ flowchart TD
     I --> E
 ```
 
-## Diagramme d'activité Coordinateur
+### Diagramme d'activité Coordinateur
 
 ```mermaid
 flowchart TD
@@ -120,7 +132,7 @@ flowchart TD
     Book --> ConsultRooms
 ```
 
-## Diagramme d'activité Administrateur
+### Diagramme d'activité Administrateur
     
 ```mermaid
 flowchart TD
