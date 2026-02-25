@@ -22,6 +22,9 @@ final class DashboardAdminsController extends AbstractController
 
         /** @var User $connectedUser */
         $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
         $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
         $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
 
@@ -40,6 +43,9 @@ final class DashboardAdminsController extends AbstractController
 
         /** @var User $connectedUser */
         $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
         $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
         $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
 
@@ -83,6 +89,9 @@ final class DashboardAdminsController extends AbstractController
 
         /** @var User $connectedUser */
         $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
         $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
         $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
 
@@ -101,6 +110,9 @@ final class DashboardAdminsController extends AbstractController
 
         /** @var User $connectedUser */
         $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
 
         if ($admin->getUser()->getId() === $connectedUser->getId()) {
             $this->addFlash('error', 'Vous ne pouvez pas modifier votre propre profil administrateur ici.');

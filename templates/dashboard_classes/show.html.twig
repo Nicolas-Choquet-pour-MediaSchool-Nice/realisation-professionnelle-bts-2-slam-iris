@@ -3,6 +3,16 @@
 {% block title %}Classe : {{ school_class.name }}{% endblock %}
 
 {% block body %}
+<style>
+    body {
+        display: block!important;
+    }
+
+    nav, .card {
+        width: 100%;
+        max-width: 100%;
+    }
+</style>
 <div class="container">
     <div class="header-section">
         <h1>Classe : {{ school_class.name }}</h1>
@@ -34,12 +44,18 @@
                     <td>{{ student.user.firstname }} {{ student.user.lastname }}</td>
                     <td>{{ student.user.email }}</td>
                     <td>
-                        <a href="{{ path('app_dashboard_students_show', {'id': student.id}) }}" class="btn btn-outline btn-sm">Voir profil</a>
+                        <div class="actions-cell">
+                            <a href="{{ path('app_dashboard_students_show', {'id': student.id}) }}" class="btn btn-outline btn-sm">Voir profil</a>
+                            <form method="post" action="{{ path('app_dashboard_class_remove_student', {'id': school_class.id, 'student_id': student.id}) }}" onsubmit="return confirm('Voulez-vous vraiment retirer cet étudiant de la classe ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('remove_student' ~ student.id) }}">
+                                <button class="btn btn-danger btn-sm">Retirer de la classe</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="3" style="text-align: center; padding: 40px; color: #999;">
+                    <td colspan="3" style="text-align: center; padding: 40px; color: var(--text-muted);">
                         Aucun élève dans cette classe pour le moment
                     </td>
                 </tr>
@@ -48,7 +64,7 @@
         </table>
 
         {% if isAdmin %}
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end;">
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end;">
                 {{ include('dashboard_classes/_delete_form.html.twig') }}
             </div>
         {% endif %}

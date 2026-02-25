@@ -3,6 +3,16 @@
 {% block title %}Ajouter un/des étudiant(s){% endblock %}
 
 {% block body %}
+    <style>
+        body {
+            display: block!important;
+        }
+
+        nav, .card {
+            width: 100%;
+            max-width: 100%;
+        }
+    </style>
     <h1>Ajouter un/des étudiant(s)</h1>
 
     {{ form_start(form) }}

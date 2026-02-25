@@ -3,6 +3,16 @@
 {% block title %}Modifier le coordinateur{% endblock %}
 
 {% block body %}
+<style>
+    body {
+        display: block!important;
+    }
+
+    nav, .card {
+        width: 100%;
+        max-width: 100%;
+    }
+</style>
 <div class="container">
     <div class="header-section">
         <h1>Modifier le coordinateur : {{ coordinator.user.firstname }} {{ coordinator.user.lastname }}</h1>

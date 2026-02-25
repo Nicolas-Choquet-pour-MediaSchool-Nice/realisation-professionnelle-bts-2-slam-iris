@@ -22,9 +22,9 @@ class Coordinator
     private Collection $managedClasses;
 
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'coordinator')]
-    private User $user;
+    private ?User $user = null;
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }

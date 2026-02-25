@@ -20,6 +20,9 @@ final class DashboardStudentsController extends AbstractController
     {
         /* @var User $connectedUser */
         $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
         $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
         $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
 
@@ -30,6 +33,9 @@ final class DashboardStudentsController extends AbstractController
 
         /* @var User $connectedUser */
         $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
         $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
         $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
 

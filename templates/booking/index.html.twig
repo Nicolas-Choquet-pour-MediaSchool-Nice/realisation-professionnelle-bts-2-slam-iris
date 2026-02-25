@@ -7,23 +7,29 @@
     .booking-container {
         display: flex;
         flex-direction: row;
-        height: calc(100vh - 60px); /* Ajuster selon la hauteur de la nav */
+        height: calc(100vh - 70px);
         overflow: hidden;
+    }
+
+    @media screen and (min-width: 600px) {
+        .booking-container {
+            height: auto;
+        }
     }
 
     .calendar-section {
         flex: 1;
         padding: 20px;
-        border-right: 1px solid #ddd;
+        border-right: 1px solid var(--border-color);
         overflow-y: auto;
-        background-color: #f9f9f9;
+        background-color: var(--bg-light);
     }
 
     .reservations-section {
         flex: 1;
         padding: 20px;
         overflow-y: auto;
-        background-color: #fff;
+        background-color: var(--card-bg);
     }
 
     .time-slots-container {
@@ -37,20 +43,20 @@
     .time-slot {
         display: flex;
         align-items: center;
-        border: 1px solid #eee;
+        border: 1px solid var(--table-border);
         border-radius: 8px;
         padding: 10px 15px;
-        background-color: #fff;
+        background-color: var(--card-bg);
         transition: background-color 0.2s;
     }
 
     .time-slot:hover {
-        background-color: #f0f7ff;
+        background-color: var(--dropdown-hover);
     }
 
     .time-slot .time {
         font-weight: bold;
-        color: #555;
+        color: var(--text-muted);
         width: 80px;
         flex-shrink: 0;
     }
@@ -61,13 +67,18 @@
     }
 
     .time-slot.occupied {
-        background-color: #eefbff;
-        border-left: 4px solid #007bff;
+        background-color: var(--badge-primary-bg);
+        border-left: 4px solid var(--primary);
+    }
+
+    .time-slot.canceled-slot {
+        background-color: var(--badge-danger-bg);
+        border-left: 4px solid var(--danger);
     }
 
     .reservation-item.canceled {
         text-decoration: line-through;
-        color: #999;
+        color: var(--text-muted);
     }
 
     .reservation-badge {
@@ -78,12 +89,12 @@
         margin-left: 10px;
     }
 
-    .badge-room { background-color: #e2e3e5; color: #383d41; }
-    .badge-user { background-color: #cce5ff; color: #004085; }
-    .badge-status { background-color: #f8d7da; color: #721c24; }
+    .badge-room { background-color: var(--badge-light-bg); color: var(--badge-light-text); }
+    .badge-user { background-color: var(--badge-primary-bg); color: var(--badge-primary-text); }
+    .badge-status { background-color: var(--badge-danger-bg); color: var(--badge-danger-text); }
 
     .calendar-wrapper {
-        background: #fff;
+        background: var(--card-bg);
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         padding: 15px;
@@ -106,7 +117,7 @@
         text-align: center;
         font-weight: bold;
         padding: 5px;
-        color: #666;
+        color: var(--text-muted);
         font-size: 0.9em;
     }
 
@@ -119,15 +130,15 @@
         border-radius: 4px;
         transition: background 0.2s;
         text-decoration: none;
-        color: #333;
+        color: var(--text-main);
     }
 
     .calendar-day:hover {
-        background-color: #e9ecef;
+        background-color: var(--dropdown-hover);
     }
 
     .calendar-day.active {
-        background-color: #007bff;
+        background-color: var(--primary);
         color: #fff;
         font-weight: bold;
     }
@@ -142,74 +153,138 @@
 
     .btn-nav {
         text-decoration: none;
-        color: #007bff;
+        color: var(--primary);
         font-size: 1.5em;
         padding: 0 10px;
     }
 
     .btn-nav:hover {
-        color: #0056b3;
+        color: var(--primary-hover);
     }
 
     .reservation-card {
-        border: 1px solid #eee;
+        border: 1px solid var(--table-border);
         border-radius: 8px;
         padding: 15px;
         margin-bottom: 15px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        background: #fff;
+        background: var(--card-bg);
     }
 
     .reservation-time {
         font-weight: bold;
-        color: #333;
+        color: var(--text-main);
     }
 
     .reservation-room {
-        color: #007bff;
+        color: var(--primary);
         font-size: 1.1em;
         margin: 5px 0;
     }
 
     .reservation-user {
-        color: #666;
+        color: var(--text-muted);
         font-size: 0.9em;
     }
 
     .status-canceled {
-        color: #dc3545;
+        color: var(--danger);
         font-weight: bold;
         text-transform: uppercase;
         font-size: 0.8em;
     }
 
     .time-slot.selected {
-        background-color: #e3f2fd;
-        border-color: #2196f3;
+        background-color: var(--badge-primary-bg);
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .booking-actions-bar {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: transparent;
+        border: none;
+        padding: 0;
+        display: none;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        z-index: 1000;
+        box-shadow: none;
+        transform: translate(0, -150px);
+    }
+
+    .booking-actions-bar.active {
+        display: flex;
+    }
+
+    .selected-info {
+        background: var(--card-bg);
+        padding: 8px 15px;
+        border-radius: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 1px solid var(--border-color);
+        font-size: 0.9em;
+    }
+
+    .btn-confirm-float {
+        background-color: var(--success);
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .btn-confirm-float:hover {
+        background-color: #218838;
+        transform: scale(1.1);
+    }
+
+    .btn-cancel-float {
+        background: var(--card-bg);
+        color: var(--text-muted);
+        border: 1px solid var(--border-color);
+        padding: 5px 15px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 0.8em;
     }
 
     .room-selector {
         margin-bottom: 20px;
         padding: 10px;
-        background: white;
+        background: var(--card-bg);
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-color);
     }
 
     .room-selector select {
         padding: 8px;
         border-radius: 4px;
-        border: 1px solid #ddd;
+        border: 1px solid var(--border-color);
+        background: var(--white);
+        color: var(--text-main);
         width: 100%;
         max-width: 300px;
     }
 
-    .time-slot:not(.occupied) {
+    .time-slot:not(.occupied):not(.canceled-slot) {
         cursor: pointer;
     }
 
-    .time-slot:not(.occupied):hover {
-        background-color: #f0f0f0;
+    .time-slot:not(.occupied):not(.canceled-slot):hover {
+        background-color: var(--dropdown-hover);
     }
 
     @media (max-width: 768px) {
@@ -220,12 +295,15 @@
         }
         .calendar-section {
             border-right: none;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .reservations-section {
+            padding-bottom: 160px;
         }
     }
 
     .btn-cancel {
-        background: #ff4d4d;
+        background: var(--danger);
         color: white;
         border: none;
         border-radius: 50%;
@@ -241,11 +319,11 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        transition: background 0.2s;
+        transition: opacity 0.2s;
     }
 
     .btn-cancel:hover {
-        background: #cc0000;
+        opacity: 0.8;
     }
 
     .reservation-item {
@@ -310,6 +388,8 @@
         <div class="time-slots-container">
             {% for slot in timeSlots %}
                 {% set slot_reservations = [] %}
+                {% set has_active = false %}
+                {% set has_canceled = false %}
                 {% for res in reservations %}
                     {% set res_start = res.reservationStart|date('H:i') %}
                     {% set res_end = res.reservationEnd|date('H:i') %}
@@ -317,12 +397,17 @@
 
                     {% if slot_time >= res_start and slot_time < res_end %}
                         {% set slot_reservations = slot_reservations|merge([res]) %}
+                        {% if res.status == 'canceled' %}
+                            {% set has_canceled = true %}
+                        {% else %}
+                            {% set has_active = true %}
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
 
-                <div class="time-slot {% if slot_reservations|length > 0 %}occupied{% endif %}"
+                <div class="time-slot {% if has_active %}occupied{% elseif has_canceled %}canceled-slot{% endif %}"
                      data-time="{{ slot|date('H:i') }}"
-                     {% if slot_reservations|length == 0 %}onclick="handleSlotClick(event, this)"{% endif %}>
+                     {% if not has_active %}onclick="handleSlotClick(event, this)"{% endif %}>
                     <div class="time">{{ slot|date('H:i') }}</div>
                     <div class="slot-content">
                         {% if slot_reservations|length > 0 %}
@@ -333,21 +418,23 @@
                                 <div class="reservation-item {% if res.status == 'canceled' %}canceled{% endif %}">
                                     {% if slot_time == res_start %}
                                         <span class="badge-room reservation-badge">{{ res.room.name }}</span>
-                                        {% if res.user.id !== user.id %}
+                                        {% if res.user.id != user.id %}
                                             <span class="badge-user reservation-badge">{{ res.user.firstname }} {{ res.user.lastname }}</span>
                                         {% endif %}
-                                        {% if res.status == 'canceled' %}
-                                            <span class="badge-status reservation-badge">Annulé</span>
-                                        {% else %}
-                                            <button class="btn-cancel" onclick="cancelReservation(event, {{ res.id }}, '{{ res_start }}', '{{ res_end }}')" title="Annuler la réservation complète ({{ res_start }} - {{ res_end }})">×</button>
+
+                                        {% if (res.user.id == user.id or isAdmin or isCoordinator) and res.status != 'canceled' %}
+                                            <button class="btn-cancel"
+                                                    onclick="cancelReservation(event, {{ res.id }}, '{{ res.reservationStart|date('H:i') }}', '{{ res.reservationEnd|date('H:i') }}')"
+                                                    title="Annuler la réservation"
+                                                    style="background: var(--danger); color: white;">×</button>
                                         {% endif %}
                                     {% else %}
-                                        <span style="font-size: 0.8em; color: #888; font-style: italic;">(suite)</span>
+                                        <span style="font-size: 0.8em; color: var(--text-muted); font-style: italic;">(suite)</span>
                                     {% endif %}
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <span style="color: #ccc;">Disponible</span>
+                            <span style="color: var(--text-muted); opacity: 0.5;">Disponible</span>
                         {% endif %}
                     </div>
                 </div>
@@ -356,40 +443,47 @@
     </div>
 </div>
 
+<div id="booking-actions" class="booking-actions-bar">
+    <div class="selected-info">
+        <span id="selected-count">0</span> créneau(x)
+    </div>
+    <button class="btn-confirm-float" onclick="confirmBooking()" title="Enregistrer la réservation">✓</button>
+    <button class="btn-cancel-float" onclick="resetSelection()">Annuler</button>
+</div>
+
 <script>
     let selectedSlots = [];
-    let isCtrlPressed = false;
-
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Control') isCtrlPressed = true;
-    });
-
-    window.addEventListener('keyup', (e) => {
-        if (e.key === 'Control') {
-            isCtrlPressed = false;
-            if (selectedSlots.length > 0) {
-                confirmBooking();
-            }
-        }
-    });
 
     function handleSlotClick(event, element) {
         const time = element.getAttribute('data-time');
 
-        if (isCtrlPressed) {
-            if (selectedSlots.includes(time)) {
-                selectedSlots = selectedSlots.filter(t => t !== time);
-                element.classList.remove('selected');
-            } else {
-                selectedSlots.push(time);
-                element.classList.add('selected');
-            }
+        if (selectedSlots.includes(time)) {
+            selectedSlots = selectedSlots.filter(t => t !== time);
+            element.classList.remove('selected');
         } else {
-            // Simple click
-            selectedSlots = [time];
+            selectedSlots.push(time);
             element.classList.add('selected');
-            confirmBooking();
         }
+
+        updateActionsBar();
+    }
+
+    function updateActionsBar() {
+        const bar = document.getElementById('booking-actions');
+        const countSpan = document.getElementById('selected-count');
+
+        if (selectedSlots.length > 0) {
+            bar.classList.add('active');
+            countSpan.textContent = selectedSlots.length;
+        } else {
+            bar.classList.remove('active');
+        }
+    }
+
+    function resetSelection() {
+        document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
+        selectedSlots = [];
+        updateActionsBar();
     }
 
     function confirmBooking() {
@@ -417,19 +511,13 @@
                     window.location.reload();
                 } else {
                     alert('Erreur: ' + (data.error || 'Une erreur est survenue'));
-                    // Reset selection on error
-                    document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
-                    selectedSlots = [];
+                    resetSelection();
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Une erreur réseau est survenue');
             });
-        } else {
-            // Reset selection if canceled
-            document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
-            selectedSlots = [];
         }
     }
 

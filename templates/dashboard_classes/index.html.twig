@@ -3,6 +3,16 @@
 {% block title %}Liste des classes{% endblock %}
 
 {% block body %}
+<style>
+    body {
+        display: block!important;
+    }
+
+    nav, .card {
+        width: 100%;
+        max-width: 100%;
+    }
+</style>
 <div class="container">
     <div class="header-section">
         <h1>Liste des classes</h1>
@@ -39,7 +49,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="4" style="text-align: center; padding: 40px; color: #999;">Aucune classe trouvée</td>
+                    <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">Aucune classe trouvée</td>
                 </tr>
             {% endfor %}
             </tbody>

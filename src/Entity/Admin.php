@@ -14,9 +14,9 @@ class Admin
     private ?int $id = null;
 
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'admin')]
-    private User $user;
+    private ?User $user = null;
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }

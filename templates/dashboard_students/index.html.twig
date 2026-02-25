@@ -3,6 +3,16 @@
 {% block title %}Liste des étudiants{% endblock %}
 
 {% block body %}
+<style>
+    body {
+        display: block!important;
+    }
+
+    nav, .card {
+        width: 100%;
+        max-width: 100%;
+    }
+</style>
 <div class="container">
     <div class="header-section">
         <h1>Liste des étudiants</h1>
@@ -50,7 +60,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5" style="text-align: center; padding: 40px; color: #999;">Aucun étudiant trouvé</td>
+                    <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">Aucun étudiant trouvé</td>
                 </tr>
             {% endfor %}
             </tbody>

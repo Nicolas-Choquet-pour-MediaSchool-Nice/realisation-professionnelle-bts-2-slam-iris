@@ -3,6 +3,16 @@
 {% block title %}Détails de l'administrateur{% endblock %}
 
 {% block body %}
+<style>
+    body {
+        display: block!important;
+    }
+
+    nav, .card {
+        width: 100%;
+        max-width: 100%;
+    }
+</style>
 <div class="container">
     <div class="header-section">
         <h1>Détails de l'administrateur : {{ admin.user.firstname }} {{ admin.user.lastname }}</h1>

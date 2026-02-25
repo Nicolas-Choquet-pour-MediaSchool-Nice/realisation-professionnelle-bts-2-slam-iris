@@ -20,6 +20,9 @@ final class DashboardClassesController extends AbstractController
     {
         /* @var User $connectedUser */
         $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
         $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
         $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
 
@@ -49,6 +52,9 @@ final class DashboardClassesController extends AbstractController
     {
         /* @var User $connectedUser */
         $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
         $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
         $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
 
@@ -82,6 +88,9 @@ final class DashboardClassesController extends AbstractController
     {
         /* @var User $connectedUser */
         $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
         $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
         $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
 
@@ -103,6 +112,9 @@ final class DashboardClassesController extends AbstractController
     {
         /* @var User $connectedUser */
         $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
         $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
         $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
 
@@ -148,6 +160,14 @@ final class DashboardClassesController extends AbstractController
         $form = $this->createForm(AddStudentToSchoolClassType::class, $schoolClass);
         $form->handleRequest($request);
 
+        /* @var User $connectedUser */
+        $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
+        $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
+        $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
+
         if ($form->isSubmitted() && $form->isValid()) {
             $students = $form->get('students')->getData();
             foreach ($students as $student) {
@@ -168,5 +188,33 @@ final class DashboardClassesController extends AbstractController
             'isCoordinator' => $isCoordinator,
             'user' => $connectedUser,
         ]);
+    }
+
+    #[Route('/dashboard/class/{id}/remove_student/{student_id}', name: 'app_dashboard_class_remove_student', methods: ['POST'])]
+    public function removeStudent(Request $request, SchoolClass $schoolClass, int $student_id, EntityManagerInterface $entityManager): Response
+    {
+        /* @var User $connectedUser */
+        $connectedUser = $this->getUser();
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
+        $isCoordinator = in_array('ROLE_COORDINATOR', $connectedUser->getRoles());
+        $isAdmin = in_array('ROLE_ADMIN', $connectedUser->getRoles());
+
+        if (!$isCoordinator && !$isAdmin) {
+            $this->addFlash('error', "Vous n'avez pas le bon rôle");
+            return $this->redirectToRoute('app_index');
+        }
+
+        if ($this->isCsrfTokenValid('remove_student'.$student_id, $request->getPayload()->getString('_token'))) {
+            $student = $entityManager->getRepository(\App\Entity\Student::class)->find($student_id);
+            if ($student && $student->getClass() === $schoolClass) {
+                $student->setClass(null);
+                $entityManager->flush();
+                $this->addFlash('success', 'Étudiant retiré de la classe avec succès.');
+            }
+        }
+
+        return $this->redirectToRoute('app_dashboard_class_show', ['id' => $schoolClass->getId()], Response::HTTP_SEE_OTHER);
     }
 }

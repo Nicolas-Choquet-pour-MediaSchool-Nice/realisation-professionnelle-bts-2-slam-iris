@@ -18,9 +18,9 @@ class Student
     private ?SchoolClass $class = null;
 
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'student')]
-    private User $user;
+    private ?User $user = null;
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }

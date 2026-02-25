@@ -3,6 +3,16 @@
 {% block title %}Liste des équipements{% endblock %}
 
 {% block body %}
+<style>
+    body {
+        display: block!important;
+    }
+
+    nav, .card {
+        width: 100%;
+        max-width: 100%;
+    }
+</style>
 <div class="container">
     <div class="header-section">
         <h1>Liste des équipements</h1>
@@ -38,7 +48,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="4" style="text-align: center; padding: 40px; color: #999;">Aucun équipement trouvé</td>
+                    <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">Aucun équipement trouvé</td>
                 </tr>
             {% endfor %}
             </tbody>

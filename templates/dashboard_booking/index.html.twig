@@ -3,6 +3,16 @@
 {% block title %}Gestion des Réservations{% endblock %}
 
 {% block body %}
+<style>
+    body {
+        display: block!important;
+    }
+
+    nav, .card {
+        width: 100%;
+        max-width: 100%;
+    }
+</style>
 <div class="container">
     <div class="header-section">
         <h1>Gestion des Réservations</h1>
@@ -55,7 +65,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="{{ isAdmin ? 7 : 6 }}" style="text-align: center; padding: 40px; color: #999;">Aucune réservation trouvée.</td>
+                        <td colspan="{{ isAdmin ? 7 : 6 }}" style="text-align: center; padding: 40px; color: var(--text-muted);">Aucune réservation trouvée.</td>
                     </tr>
                 {% endfor %}
             </tbody>
