@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un équipement{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Créer un équipement</h1>
+        <a href="{{ path('app_dashboard_equipments') }}" class="btn btn-outline">Retour à la liste</a>
+    </div>
+
+    <div class="card">
+        {{ include('dashboard_equipments/_form.html.twig', {'button_label': 'Créer'}) }}
+    </div>
+</div>
+{% endblock %}

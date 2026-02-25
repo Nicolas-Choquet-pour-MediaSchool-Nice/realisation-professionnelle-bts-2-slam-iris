@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des étudiants{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Liste des étudiants</h1>
+        {% if isAdmin %}
+            <a href="{{ path('app_dashboard_students_new') }}" class="btn btn-primary">Créer un nouvel étudiant</a>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Classe</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.user.firstname }}</td>
+                    <td>{{ student.user.lastname }}</td>
+                    <td>{{ student.user.email }}</td>
+                    <td>
+                        {% if student.class %}
+                            <span class="badge badge-primary">{{ student.class.name }}</span>
+                        {% else %}
+                            <span class="text-muted">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions-cell">
+                        <a href="{{ path('app_dashboard_students_show', {'id': student.id}) }}" class="btn btn-outline">Voir</a>
+                        <a href="{{ path('app_dashboard_students_edit', {'id': student.id}) }}" class="btn btn-outline">Modifier</a>
+                        <form
+                            method="post"
+                            action="{{ path('app_dashboard_students_reset_password', {'id': student.id}) }}"
+                            onsubmit="return confirm('Êtes-vous sûr de vouloir réinitialiser le mot de passe de cet étudiant ?');"
+                        >
+                            <input type="hidden" name="_token" value="{{ csrf_token('reset-password' ~ student.id) }}">
+                            <button class="btn btn-outline" style="color: #856404; border-color: #856404;">Reset MDP</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 40px; color: #999;">Aucun étudiant trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a href="{{ path('app_dashboard') }}" class="text-muted" style="text-decoration: none;">&larr; Retour au dashboard</a>
+    </div>
+</div>
+{% endblock %}

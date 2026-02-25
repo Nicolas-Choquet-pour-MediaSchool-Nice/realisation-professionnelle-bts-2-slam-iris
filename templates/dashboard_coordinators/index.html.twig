@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des coordinateurs{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Liste des coordinateurs</h1>
+        <a href="{{ path('app_dashboard_coordinators_new') }}" class="btn btn-primary">Créer un nouveau coordinateur</a>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Classes gérées</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for coordinator in coordinators %}
+                <tr>
+                    <td>{{ coordinator.user.firstname }}</td>
+                    <td>{{ coordinator.user.lastname }}</td>
+                    <td>{{ coordinator.user.email }}</td>
+                    <td>
+                        {% for class in coordinator.managedClasses %}
+                            <span class="badge badge-primary">{{ class.name }}</span>
+                        {% else %}
+                            <span class="text-muted">N/A</span>
+                        {% endfor %}
+                    </td>
+                    <td class="actions-cell">
+                        <a href="{{ path('app_dashboard_coordinators_show', {'id': coordinator.id}) }}" class="btn btn-outline">Voir</a>
+                        <a href="{{ path('app_dashboard_coordinators_edit', {'id': coordinator.id}) }}" class="btn btn-outline">Modifier</a>
+                        <form method="post" action="{{ path('app_dashboard_coordinators_reset_password', {'id': coordinator.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir réinitialiser le mot de passe de ce coordinateur ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('reset-password' ~ coordinator.id) }}">
+                            <button class="btn btn-outline" style="color: #856404; border-color: #856404;">Reset MDP</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 40px; color: #999;">Aucun coordinateur trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a href="{{ path('app_dashboard') }}" class="text-muted" style="text-decoration: none;">&larr; Retour au dashboard</a>
+    </div>
+</div>
+{% endblock %}

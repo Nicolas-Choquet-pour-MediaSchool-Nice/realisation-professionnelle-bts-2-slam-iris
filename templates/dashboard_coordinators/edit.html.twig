@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le coordinateur{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Modifier le coordinateur : {{ coordinator.user.firstname }} {{ coordinator.user.lastname }}</h1>
+        <a href="{{ path('app_dashboard_coordinators') }}" class="btn btn-outline">Retour à la liste</a>
+    </div>
+
+    <div class="card">
+        {{ include('dashboard_coordinators/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end;">
+            {{ include('dashboard_coordinators/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

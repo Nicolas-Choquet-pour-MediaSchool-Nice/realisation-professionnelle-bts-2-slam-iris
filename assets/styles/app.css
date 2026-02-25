@@ -1,0 +1,114 @@
+body {
+    background-color: skyblue;
+    min-height: 100vh;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    background: rgba(255, 255, 255, .5);
+    padding: 20px;
+
+    > section > a {
+        color: black;
+        text-decoration: none;
+
+        &.active {
+            text-decoration: underline;
+        }
+    }
+}
+
+/* Le conteneur du menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Style du bouton */
+.dropbtn {
+    background-color: #3498db00;
+    color: black;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Le menu caché par défaut */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+}
+
+/* Style des liens à l'intérieur */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Changement de couleur au survol des liens */
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+/* L'ACTION : Affiche le menu au survol du parent */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change la couleur du bouton quand le menu est ouvert */
+.dropdown:hover .dropbtn {
+    background-color: #2980b900;
+}
+
+.card {
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    max-height: 500px;
+    border: 1px solid black;
+    border-radius: 10px;
+
+    body > &, body:has(&) {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.alert {
+    width: 100%;
+    height: 30px;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 0 10px;
+
+    &.alert-error {
+        background: darkred;
+        color: white;
+    }
+}

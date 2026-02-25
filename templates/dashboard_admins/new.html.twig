@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel Administrateur{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Créer un nouvel administrateur</h1>
+        <a href="{{ path('app_dashboard_admins') }}" class="btn btn-outline">Retour à la liste</a>
+    </div>
+
+    <div class="card">
+        {{ include('dashboard_admins/_form.html.twig') }}
+    </div>
+</div>
+{% endblock %}

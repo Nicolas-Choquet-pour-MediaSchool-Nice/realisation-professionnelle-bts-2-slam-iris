@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Classe : {{ school_class.name }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Classe : {{ school_class.name }}</h1>
+        <div class="actions-cell">
+            {% if isAdmin %}
+                <a href="{{ path('app_dashboard_class_edit', {'id': school_class.id}) }}" class="btn btn-primary">Modifier</a>
+            {% endif %}
+            <a href="{{ path('app_dashboard_classes') }}" class="btn btn-outline">Retour à la liste</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="header-section">
+            <h3>Élèves ({{ school_class.students | length }})</h3>
+            <a href="{{ path('app_dashboard_class_add_student', {'id': school_class.id}) }}" class="btn btn-outline">+ Ajouter un élève</a>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom Complet</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for student in school_class.students %}
+                <tr>
+                    <td>{{ student.user.firstname }} {{ student.user.lastname }}</td>
+                    <td>{{ student.user.email }}</td>
+                    <td>
+                        <a href="{{ path('app_dashboard_students_show', {'id': student.id}) }}" class="btn btn-outline btn-sm">Voir profil</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" style="text-align: center; padding: 40px; color: #999;">
+                        Aucun élève dans cette classe pour le moment
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if isAdmin %}
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end;">
+                {{ include('dashboard_classes/_delete_form.html.twig') }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

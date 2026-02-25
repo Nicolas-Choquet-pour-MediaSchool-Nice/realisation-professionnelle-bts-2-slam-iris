@@ -1,0 +1,464 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservations{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .booking-container {
+        display: flex;
+        flex-direction: row;
+        height: calc(100vh - 60px); /* Ajuster selon la hauteur de la nav */
+        overflow: hidden;
+    }
+
+    .calendar-section {
+        flex: 1;
+        padding: 20px;
+        border-right: 1px solid #ddd;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+    }
+
+    .reservations-section {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background-color: #fff;
+    }
+
+    .time-slots-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .time-slot {
+        display: flex;
+        align-items: center;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 10px 15px;
+        background-color: #fff;
+        transition: background-color 0.2s;
+    }
+
+    .time-slot:hover {
+        background-color: #f0f7ff;
+    }
+
+    .time-slot .time {
+        font-weight: bold;
+        color: #555;
+        width: 80px;
+        flex-shrink: 0;
+    }
+
+    .time-slot .slot-content {
+        flex-grow: 1;
+        font-size: 0.9em;
+    }
+
+    .time-slot.occupied {
+        background-color: #eefbff;
+        border-left: 4px solid #007bff;
+    }
+
+    .reservation-item.canceled {
+        text-decoration: line-through;
+        color: #999;
+    }
+
+    .reservation-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        margin-left: 10px;
+    }
+
+    .badge-room { background-color: #e2e3e5; color: #383d41; }
+    .badge-user { background-color: #cce5ff; color: #004085; }
+    .badge-status { background-color: #f8d7da; color: #721c24; }
+
+    .calendar-wrapper {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 15px;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+    }
+
+    .calendar-day-name {
+        text-align: center;
+        font-weight: bold;
+        padding: 5px;
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .calendar-day {
+        aspect-ratio: 1 / 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background 0.2s;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .calendar-day:hover {
+        background-color: #e9ecef;
+    }
+
+    .calendar-day.active {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .calendar-day.empty {
+        cursor: default;
+    }
+
+    .calendar-day.empty:hover {
+        background: none;
+    }
+
+    .btn-nav {
+        text-decoration: none;
+        color: #007bff;
+        font-size: 1.5em;
+        padding: 0 10px;
+    }
+
+    .btn-nav:hover {
+        color: #0056b3;
+    }
+
+    .reservation-card {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        background: #fff;
+    }
+
+    .reservation-time {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .reservation-room {
+        color: #007bff;
+        font-size: 1.1em;
+        margin: 5px 0;
+    }
+
+    .reservation-user {
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .status-canceled {
+        color: #dc3545;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.8em;
+    }
+
+    .time-slot.selected {
+        background-color: #e3f2fd;
+        border-color: #2196f3;
+    }
+
+    .room-selector {
+        margin-bottom: 20px;
+        padding: 10px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .room-selector select {
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .time-slot:not(.occupied) {
+        cursor: pointer;
+    }
+
+    .time-slot:not(.occupied):hover {
+        background-color: #f0f0f0;
+    }
+
+    @media (max-width: 768px) {
+        .booking-container {
+            flex-direction: column;
+            height: auto;
+            overflow: visible;
+        }
+        .calendar-section {
+            border-right: none;
+            border-bottom: 1px solid #ddd;
+        }
+    }
+
+    .btn-cancel {
+        background: #ff4d4d;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        line-height: 18px;
+        text-align: center;
+        cursor: pointer;
+        font-weight: bold;
+        margin-left: 10px;
+        font-size: 14px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+
+    .btn-cancel:hover {
+        background: #cc0000;
+    }
+
+    .reservation-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="booking-container">
+    <div class="calendar-section">
+        <h2>Calendrier</h2>
+
+        <div class="calendar-wrapper">
+            <div class="calendar-header">
+                <a href="{{ path('app_booking', {date: prevMonth|date('Y-m-d')}) }}" class="btn-nav">&laquo;</a>
+                <h3>{{ currentMonth|date('F Y')|trans }}</h3>
+                <a href="{{ path('app_booking', {date: nextMonth|date('Y-m-d')}) }}" class="btn-nav">&raquo;</a>
+            </div>
+
+            <div class="calendar-grid">
+                <div class="calendar-day-name">Lun</div>
+                <div class="calendar-day-name">Mar</div>
+                <div class="calendar-day-name">Mer</div>
+                <div class="calendar-day-name">Jeu</div>
+                <div class="calendar-day-name">Ven</div>
+                <div class="calendar-day-name">Sam</div>
+                <div class="calendar-day-name">Dim</div>
+
+                {% for day in daysInMonth %}
+                    {% if day is null %}
+                        <div class="calendar-day empty"></div>
+                    {% else %}
+                        <a href="{{ path('app_booking', {date: day|date('Y-m-d')}) }}"
+                           class="calendar-day {% if day|date('Y-m-d') == selectedDate|date('Y-m-d') %}active{% endif %}">
+                            {{ day|date('d') }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="reservations-section">
+        <div class="room-selector">
+            <label for="room-select">Choisir une salle :</label>
+            <select id="room-select" onchange="window.location.href = '{{ path('app_booking', {date: selectedDate|date('Y-m-d')}) }}&room=' + this.value">
+                {% for room in rooms %}
+                    <option value="{{ room.id }}" {% if selectedRoom and selectedRoom.id == room.id %}selected{% endif %}>
+                        {{ room.name }} (Capacité: {{ room.capacity }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <h2 style="margin-top: 0; margin-bottom: 20px;">
+            Réservations du {{ selectedDate|date('d/m/Y') }} {% if selectedRoom %}- {{ selectedRoom.name }}{% endif %}
+        </h2>
+
+        <div class="time-slots-container">
+            {% for slot in timeSlots %}
+                {% set slot_reservations = [] %}
+                {% for res in reservations %}
+                    {% set res_start = res.reservationStart|date('H:i') %}
+                    {% set res_end = res.reservationEnd|date('H:i') %}
+                    {% set slot_time = slot|date('H:i') %}
+
+                    {% if slot_time >= res_start and slot_time < res_end %}
+                        {% set slot_reservations = slot_reservations|merge([res]) %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="time-slot {% if slot_reservations|length > 0 %}occupied{% endif %}"
+                     data-time="{{ slot|date('H:i') }}"
+                     {% if slot_reservations|length == 0 %}onclick="handleSlotClick(event, this)"{% endif %}>
+                    <div class="time">{{ slot|date('H:i') }}</div>
+                    <div class="slot-content">
+                        {% if slot_reservations|length > 0 %}
+                            {% for res in slot_reservations %}
+                                {% set res_start = res.reservationStart|date('H:i') %}
+                                {% set res_end = res.reservationEnd|date('H:i') %}
+                                {% set slot_time = slot|date('H:i') %}
+                                <div class="reservation-item {% if res.status == 'canceled' %}canceled{% endif %}">
+                                    {% if slot_time == res_start %}
+                                        <span class="badge-room reservation-badge">{{ res.room.name }}</span>
+                                        {% if res.user.id !== user.id %}
+                                            <span class="badge-user reservation-badge">{{ res.user.firstname }} {{ res.user.lastname }}</span>
+                                        {% endif %}
+                                        {% if res.status == 'canceled' %}
+                                            <span class="badge-status reservation-badge">Annulé</span>
+                                        {% else %}
+                                            <button class="btn-cancel" onclick="cancelReservation(event, {{ res.id }}, '{{ res_start }}', '{{ res_end }}')" title="Annuler la réservation complète ({{ res_start }} - {{ res_end }})">×</button>
+                                        {% endif %}
+                                    {% else %}
+                                        <span style="font-size: 0.8em; color: #888; font-style: italic;">(suite)</span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <span style="color: #ccc;">Disponible</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedSlots = [];
+    let isCtrlPressed = false;
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Control') isCtrlPressed = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+        if (e.key === 'Control') {
+            isCtrlPressed = false;
+            if (selectedSlots.length > 0) {
+                confirmBooking();
+            }
+        }
+    });
+
+    function handleSlotClick(event, element) {
+        const time = element.getAttribute('data-time');
+
+        if (isCtrlPressed) {
+            if (selectedSlots.includes(time)) {
+                selectedSlots = selectedSlots.filter(t => t !== time);
+                element.classList.remove('selected');
+            } else {
+                selectedSlots.push(time);
+                element.classList.add('selected');
+            }
+        } else {
+            // Simple click
+            selectedSlots = [time];
+            element.classList.add('selected');
+            confirmBooking();
+        }
+    }
+
+    function confirmBooking() {
+        if (selectedSlots.length === 0) return;
+
+        const message = selectedSlots.length === 1
+            ? `Réserver le créneau de ${selectedSlots[0]} ?`
+            : `Réserver les ${selectedSlots.length} créneaux sélectionnés ?`;
+
+        if (confirm(message)) {
+            fetch('{{ path('app_booking_reserve') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    date: '{{ selectedDate|date('Y-m-d') }}',
+                    slots: selectedSlots,
+                    roomId: '{{ selectedRoom ? selectedRoom.id : '' }}'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert('Erreur: ' + (data.error || 'Une erreur est survenue'));
+                    // Reset selection on error
+                    document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
+                    selectedSlots = [];
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Une erreur réseau est survenue');
+            });
+        } else {
+            // Reset selection if canceled
+            document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
+            selectedSlots = [];
+        }
+    }
+
+    function cancelReservation(event, reservationId, startTime, endTime) {
+        event.stopPropagation();
+        let message = 'Voulez-vous vraiment annuler cette réservation ?';
+        if (startTime && endTime) {
+            message = `Voulez-vous vraiment annuler toute la réservation de ${startTime} à ${endTime} ?`;
+        }
+        if (confirm(message)) {
+            fetch(`/booking/cancel/${reservationId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert('Erreur: ' + (data.error || 'Une erreur est survenue'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Une erreur réseau est survenue');
+            });
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Réservations{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Gestion des Réservations</h1>
+        <a href="{{ path('app_dashboard') }}" class="btn btn-outline">&larr; Retour au dashboard</a>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Salle</th>
+                    <th>Utilisateur</th>
+                    <th>Date</th>
+                    <th>Créneau</th>
+                    <th>Statut</th>
+                    {% if isAdmin %}
+                        <th>Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for res in reservations %}
+                    <tr>
+                        <td>{{ res.id }}</td>
+                        <td><strong>{{ res.room.name }}</strong></td>
+                        <td>{{ res.user.firstname }} {{ res.user.lastname }}</td>
+                        <td>{{ res.reservationStart|date('d/m/Y') }}</td>
+                        <td>
+                            <span class="badge badge-light">
+                                {{ res.reservationStart|date('H:i') }} - {{ res.reservationEnd|date('H:i') }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if res.status == 'canceled' %}
+                                <span class="badge badge-danger">Annulée</span>
+                            {% else %}
+                                <span class="badge badge-success">Active</span>
+                            {% endif %}
+                        </td>
+                        {% if isAdmin %}
+                            <td class="actions-cell">
+                                {% if res.status != 'canceled' %}
+                                    <button class="btn btn-danger" onclick="cancelReservation({{ res.id }}, '{{ res.reservationStart|date('H:i') }}', '{{ res.reservationEnd|date('H:i') }}')">
+                                        Annuler
+                                    </button>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="{{ isAdmin ? 7 : 6 }}" style="text-align: center; padding: 40px; color: #999;">Aucune réservation trouvée.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function cancelReservation(reservationId, startTime, endTime) {
+    if (confirm(`Voulez-vous vraiment annuler la réservation de ${startTime} à ${endTime} ?`)) {
+        fetch(`/booking/cancel/${reservationId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Erreur: ' + (data.error || 'Une erreur est survenue'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Une erreur réseau est survenue');
+        });
+    }
+}
+</script>
+{% endblock %}

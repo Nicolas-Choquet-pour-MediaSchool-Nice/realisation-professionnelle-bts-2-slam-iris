@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des classes{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Liste des classes</h1>
+        {% if isAdmin %}
+            <a href="{{ path('app_dashboard_class_new') }}" class="btn btn-primary">Créer une nouvelle classe</a>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Étudiants</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for school_class in school_classes %}
+                <tr>
+                    <td>{{ school_class.id }}</td>
+                    <td><strong>{{ school_class.name }}</strong></td>
+                    <td>
+                        <span class="badge badge-light">{{ school_class.students|length }} étudiant{% if school_class.students|length > 1 %}s{% endif %}</span>
+                    </td>
+                    <td class="actions-cell">
+                        <a href="{{ path('app_dashboard_class_show', {'id': school_class.id}) }}" class="btn btn-outline">Voir</a>
+                        {% if isAdmin %}
+                            <a href="{{ path('app_dashboard_class_edit', {'id': school_class.id}) }}" class="btn btn-outline">Modifier</a>
+                            {{ include('dashboard_classes/_delete_form.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 40px; color: #999;">Aucune classe trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a href="{{ path('app_dashboard') }}" class="text-muted" style="text-decoration: none;">&larr; Retour au dashboard</a>
+    </div>
+</div>
+{% endblock %}

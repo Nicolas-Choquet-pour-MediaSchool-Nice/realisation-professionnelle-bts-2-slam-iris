@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'étudiant{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Détails de l'étudiant : {{ student.user.firstname }} {{ student.user.lastname }}</h1>
+        <div class="actions-cell">
+            <a href="{{ path('app_dashboard_students_edit', {'id': student.id}) }}" class="btn btn-primary">Modifier</a>
+            <a href="{{ path('app_dashboard_students') }}" class="btn btn-outline">Retour à la liste</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th style="width: 200px;">Id</th>
+                    <td>{{ student.id }}</td>
+                </tr>
+                <tr>
+                    <th>Prénom</th>
+                    <td>{{ student.user.firstname }}</td>
+                </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ student.user.lastname }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ student.user.email }}</td>
+                </tr>
+                <tr>
+                    <th>Classe</th>
+                    <td>
+                        {% if student.class %}
+                            <span class="badge badge-primary">{{ student.class.name }}</span>
+                        {% else %}
+                            <span class="text-muted">N/A</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end;">
+            {{ include('dashboard_students/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

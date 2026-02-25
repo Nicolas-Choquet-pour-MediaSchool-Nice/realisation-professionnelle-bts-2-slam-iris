@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des équipements{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Liste des équipements</h1>
+        <a href="{{ path('app_dashboard_equipments_new') }}" class="btn btn-primary">Créer un nouvel équipement</a>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Salles</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for equipment in equipments %}
+                <tr>
+                    <td>{{ equipment.id }}</td>
+                    <td><strong>{{ equipment.name }}</strong></td>
+                    <td>
+                        {% for room in equipment.rooms %}
+                            <span class="badge badge-light">{{ room.name }}</span>
+                        {% else %}
+                            <span class="text-muted" style="font-size: 0.9em; font-style: italic;">Aucune salle</span>
+                        {% endfor %}
+                    </td>
+                    <td class="actions-cell">
+                        <a href="{{ path('app_dashboard_equipments_show', {'id': equipment.id}) }}" class="btn btn-outline">Voir</a>
+                        <a href="{{ path('app_dashboard_equipments_edit', {'id': equipment.id}) }}" class="btn btn-outline">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 40px; color: #999;">Aucun équipement trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a href="{{ path('app_dashboard') }}" class="text-muted" style="text-decoration: none;">&larr; Retour au dashboard</a>
+    </div>
+</div>
+{% endblock %}

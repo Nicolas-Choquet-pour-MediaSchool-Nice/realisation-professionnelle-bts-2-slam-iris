@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <style>
+            :root {
+                --primary: #007bff;
+                --primary-hover: #0056b3;
+                --bg-light: #f9f9f9;
+                --border-color: #ddd;
+                --text-main: #333;
+                --text-muted: #666;
+                --white: #fff;
+                --danger: #dc3545;
+                --success: #28a745;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                margin: 0;
+                color: var(--text-main);
+                background-color: var(--bg-light);
+            }
+
+            nav {
+                background-color: var(--white);
+                border-bottom: 1px solid var(--border-color);
+                display: flex;
+                justify-content: space-between;
+                padding: 10px 20px;
+                align-items: center;
+                height: 60px;
+                box-sizing: border-box;
+            }
+
+            nav a {
+                text-decoration: none;
+                color: var(--text-main);
+                padding: 8px 12px;
+                border-radius: 4px;
+            }
+
+            nav a.active {
+                background-color: var(--primary);
+                color: var(--white);
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 20px auto;
+                padding: 0 20px;
+            }
+
+            .card {
+                background: var(--white);
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+
+            .header-section {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            h1, h2, h3 {
+                margin-top: 0;
+            }
+
+            .btn {
+                display: inline-block;
+                padding: 8px 16px;
+                border-radius: 4px;
+                text-decoration: none;
+                cursor: pointer;
+                border: none;
+                font-size: 14px;
+                transition: background 0.2s;
+            }
+
+            .btn-primary { background-color: var(--primary); color: white; }
+            .btn-primary:hover { background-color: var(--primary-hover); }
+
+            .btn-outline { border: 1px solid var(--primary); color: var(--primary); background: transparent; }
+            .btn-outline:hover { background-color: var(--primary); color: white; }
+
+            .btn-danger { background-color: var(--danger); color: white; }
+            .btn-danger:hover { background-color: #c82333; }
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+
+            .table th, .table td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid #eee;
+            }
+
+            .table th {
+                font-weight: bold;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                font-size: 0.85em;
+            }
+
+            .badge {
+                display: inline-block;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 0.8em;
+                font-weight: bold;
+            }
+
+            .badge-light { background-color: #e2e3e5; color: #383d41; }
+            .badge-primary { background-color: #cce5ff; color: #004085; }
+            .badge-success { background-color: #d4edda; color: #155724; }
+            .badge-danger { background-color: #f8d7da; color: #721c24; }
+
+            .actions-cell {
+                display: flex;
+                gap: 8px;
+            }
+
+            .alert {
+                padding: 12px 20px;
+                border-radius: 4px;
+                margin-bottom: 20px;
+                max-width: 1200px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .alert-success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+            .alert-danger { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+
+            .dropdown { position: relative; display: inline-block; }
+            .dropbtn { background-color: transparent; border: none; cursor: pointer; font-size: 16px; }
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                right: 0;
+                background-color: #f9f9f9;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+                border-radius: 4px;
+            }
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+            .dropdown-content a:hover { background-color: #f1f1f1; }
+            .dropdown:hover .dropdown-content { display: block; }
+
+        </style>
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    {% set currentPath = path(app.request.attributes.get('_route'),
+        app.request.attributes.get('_route_params')) %}
+    {% if isAdmin is not defined %}
+        {% set isAdmin = false %}
+    {% endif %}
+    {% if isCoordinator is not defined %}
+        {% set isCoordinator = false %}
+    {% endif %}
+    <body>
+        {% if user is defined %}
+        <nav>
+            <section>
+                {% if isAdmin or isCoordinator %}
+                <a
+                    href="{{ path('app_dashboard') }}"
+                    class="{% if currentPath starts with path('app_dashboard') %}active{% endif %}"
+                >Dashboard</a>
+                {% endif %}
+                <a
+                    href="{{ path('app_booking') }}"
+                    class="{% if currentPath === path('app_booking') %}active{% endif %}"
+                >Réserver</a>
+            </section>
+
+            {% if user is defined %}
+            <section>
+                <div class="dropdown">
+                    <button class="dropbtn">{{ user.firstname }} {{ user.lastname}} ▼</button>
+                    <div class="dropdown-content">
+                        <a href="{{ logout_url() }}">Déconnexion</a>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+        </nav>
+        {% endif %}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% block body %}{% endblock %}
+    </body>
+</html>

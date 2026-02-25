@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel étudiant{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Créer un nouvel étudiant</h1>
+        <a href="{{ path('app_dashboard_students') }}" class="btn btn-outline">Retour à la liste</a>
+    </div>
+
+    <div class="card">
+        {{ include('dashboard_students/_form.html.twig') }}
+    </div>
+</div>
+{% endblock %}

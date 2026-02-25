@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la salle{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Détails de la salle : {{ room.name }}</h1>
+        <div class="actions-cell">
+            <a href="{{ path('app_dashboard_rooms_edit', {'id': room.id}) }}" class="btn btn-primary">Modifier</a>
+            <a href="{{ path('app_dashboard_rooms') }}" class="btn btn-outline">Retour à la liste</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th style="width: 200px;">Id</th>
+                    <td>{{ room.id }}</td>
+                </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td><strong>{{ room.name }}</strong></td>
+                </tr>
+                <tr>
+                    <th>Capacité</th>
+                    <td><span class="badge badge-light">{{ room.capacity }} personnes</span></td>
+                </tr>
+                <tr>
+                    <th>Équipements</th>
+                    <td>
+                        {% for equipment in room.equipments %}
+                            <span class="badge badge-primary">{{ equipment.name }}</span>
+                        {% else %}
+                            <span class="text-muted" style="font-size: 0.9em; font-style: italic;">Aucun équipement</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end;">
+            {{ include('dashboard_rooms/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

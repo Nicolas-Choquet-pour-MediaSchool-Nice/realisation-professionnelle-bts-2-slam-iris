@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'administrateur{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="header-section">
+        <h1>Détails de l'administrateur : {{ admin.user.firstname }} {{ admin.user.lastname }}</h1>
+        <div class="actions-cell">
+            {% if admin.user.id != user.id %}
+                <a href="{{ path('app_dashboard_admins_edit', {'id': admin.id}) }}" class="btn btn-primary">Modifier</a>
+            {% endif %}
+            <a href="{{ path('app_dashboard_admins') }}" class="btn btn-outline">Retour à la liste</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th style="width: 200px;">Id</th>
+                    <td>{{ admin.id }}</td>
+                </tr>
+                <tr>
+                    <th>Prénom</th>
+                    <td>{{ admin.user.firstname }}</td>
+                </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ admin.user.lastname }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ admin.user.email }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        {% if admin.user.id != user.id %}
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end;">
+                {{ include('dashboard_admins/_delete_form.html.twig') }}
+            </div>
+        {% else %}
+            <div style="margin-top: 20px; text-align: right;">
+                <span class="badge badge-light">C'est votre compte</span>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
