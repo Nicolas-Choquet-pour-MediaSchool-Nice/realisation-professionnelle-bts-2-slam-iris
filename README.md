@@ -7,6 +7,7 @@ Projet de réalisation professionnelle pour les BTS 2 SLAM IRIS réalisé par me
 git clone https://github.com/Nicolas-Choquet-pour-MediaSchool-Nice/realisation-professionnelle-bts-2-slam-iris.git
 cd realisation-professionnelle-bts-2-slam-iris
 # remplire le fichier .env au moins avec l'url de connexion à la bdd
+composer install
 php bin/console doctrine:migration:migrate
 symfony server:start
 ```
