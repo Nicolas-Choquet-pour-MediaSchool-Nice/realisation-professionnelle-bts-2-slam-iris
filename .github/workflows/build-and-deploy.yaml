@@ -20,6 +20,16 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
+            - name: Setup .env
+              run: |
+                  echo "APP_ENV=dev" >> .env
+                  echo "APP_SECRET=$(openssl rand -hex 30)" >> .env
+                  echo "APP_SHARE_DIR=var/share" >> .env
+                  echo "DEFAULT_URI=http://localhost" >> .env
+                  echo "DATABASE_URL=postgresql://nchoquet:nchoquet@127.0.0.1:5432/roombooking?serverVersion=16&charset=utf8" >> .env
+                  echo "MAILER_DSN=null://null" >> .env
+                  echo "MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0" >> .env
+
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
@@ -44,9 +54,6 @@ jobs:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
                   password: ${{ secrets.GH_PACKAGES_TOKEN }}
-
-            - name: composer install
-              run: composer update
 
             - name: Build and push Docker image
               uses: docker/build-push-action@v5
