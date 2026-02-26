@@ -6,7 +6,7 @@ on:
 
 env:
     REGISTRY: ghcr.io
-    REPOSITORY_NAME: Nicolas-Choquet-pour-MediaSchool-Nice/realisation-professionnelle-bts-2-slam-iris
+    REPOSITORY_NAME: nicolas-choquet-pour-mediaschool-nice/realisation-professionnelle-bts-2-slam-iris
 
 jobs:
     build:
@@ -54,11 +54,23 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GH_PACKAGES_TOKEN }}
 
-            - name: Build and push Docker image
-              uses: docker/build-push-action@v5
-              with:
-                  context: .
-                  push: true
-                  tags: |
-                      ghcr.io/${{ env.REPOSITORY_NAME }}:latest
-                      ghcr.io/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
+            - name: Build and push
+              run: |
+                  # On définit les variables en local dans le shell pour éviter les surprises
+                  REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+                  REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+                  IMAGE_ID=ghcr.io/$REPO_OWNER/$REPO_NAME
+
+                  echo "Build de l'image : $IMAGE_ID"
+
+                  docker build . -t $IMAGE_ID:latest
+                  docker push $IMAGE_ID:latest
+
+#            - name: Build and push Docker image
+#              uses: docker/build-push-action@v5
+#              with:
+#                  context: .
+#                  push: true
+#                  tags: |
+#                      ghcr.io/${{ env.REPOSITORY_NAME }}:latest
+#                      ghcr.io/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
