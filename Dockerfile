@@ -36,7 +36,7 @@ COPY composer.json composer.lock ./
 COPY . .
 
 # Finalisation de l'installation (autoloader et scripts)
-RUN composer update --prefer-dist --no-progress --no-interaction
+RUN composer update --no-interaction
 ARG APP_ENV=prod
 ARG APP_SECRET=ChangeMe
 ARG DATABASE_URL="postgresql://app:app@127.0.0.1:5432/app?serverVersion=16&charset=utf8"
