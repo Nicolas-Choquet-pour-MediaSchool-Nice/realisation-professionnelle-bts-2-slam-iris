@@ -69,21 +69,13 @@ jobs:
 
             - name: Create .env from secret (optional)
               run: |
-                  echo "Creating .env from secret"
-
-                  echo "SMTP_HOST=${{secrets.SMTP_HOST}}" >> build/.env
-                  echo "SMTP_PORT=465" >> build/.env
-                  echo "SMTP_USER=${{secrets.SMTP_USER}}" >> build/.env
-                  echo "SMTP_PASS=${{secrets.SMTP_PASS}}" >> build/.env
-                  echo "SMTP_SECURE=true" >> build/.env
-                  echo "SMTP_FROM=${{secrets.MAIL_FROM}}" >> build/.env
-                  echo "APP_NAME=${{secrets.APP_NAME}}" >> build/.env
-
-                  echo "VITE_SUPPORT_EMAIL=${{secrets.SUPPORT_EMAIL}}" >> build/.env
-
-                  echo "DATABASE_URL=mysql://${{secrets.DB_USER}}:${{secrets.DB_PASS}}@${{secrets.DB_HOST}}:${{secrets.DB_PORT}}/${{secrets.DB_NAME}}" >> build/.env
-
-                  echo "JWT_SECRET=${{secrets.JWT_SECRET}}" >> build/.env
+                  echo "APP_ENV=dev" >> .env
+                  echo "APP_SECRET=$(openssl rand -hex 30)" >> build/.env
+                  echo "APP_SHARE_DIR=var/share" >> build/.env
+                  echo "DEFAULT_URI=https://bts-sio-slam-2.nicolas-choquet.fr" >> build/.env
+                  echo "DATABASE_URL=postgresql://${{ secrets.PGSQL_USER }}:${{ secrets.PGSQL_PASSWORD }}@postgresql-nicolas-choquet.alwaysdata.net:5432/nicolas-choquet_bts-sio-2-2526?serverVersion=16&charset=utf8" >> build/.env
+                  echo "MAILER_DSN=null://null" >> build/.env
+                  echo "MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0" >> build/.env
 
             - name: Debug artifact contents
               run: |
