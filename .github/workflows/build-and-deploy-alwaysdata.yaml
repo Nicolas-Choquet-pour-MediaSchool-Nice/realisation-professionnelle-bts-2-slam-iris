@@ -45,6 +45,7 @@ jobs:
               run: |
                   mkdir -p ../artifact
                   cp -r ./* ../artifact
+                  cp ./.env ../artifact/.env
                   cp composer.json ../artifact/composer.json
                   if [ -f composer.lock ]; then cp composer.lock ../artifact/composer.lock; fi
                   cd ../artifact && composer update --no-interaction --prefer-dist --optimize-autoloader
