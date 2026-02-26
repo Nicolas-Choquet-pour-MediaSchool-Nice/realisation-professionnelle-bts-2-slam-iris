@@ -45,7 +45,7 @@ COPY . .
 
 # On génère l'autoloader optimisé et on lance les scripts post-install
 RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
-RUN composer run-script post-install-cmd
+RUN composer run post-install-cmd
 ARG APP_ENV=prod
 ARG APP_SECRET=ChangeMe
 ARG DATABASE_URL="postgresql://app:app@127.0.0.1:5432/app?serverVersion=16&charset=utf8"
