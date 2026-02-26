@@ -29,14 +29,23 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copie des fichiers de configuration composer
+# ÉTAPE CRUCIALE : On définit la variable pour que Composer sache qu'on est en prod
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV APP_ENV=prod
+
+# Copie des fichiers composer en premier pour optimiser le cache Docker
 COPY composer.json composer.lock ./
 
-# Copie du reste des fichiers du projet
+# On installe les dépendances SANS les scripts pour l'instant
+# Cela permet de valider la version PHP avant de copier tout le code
+RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-interaction
+
+# Maintenant on copie le reste du projet
 COPY . .
 
-# Finalisation de l'installation (autoloader et scripts)
-RUN composer install --prefer-dist --no-progress --no-interaction
+# On génère l'autoloader optimisé et on lance les scripts post-install
+RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
+RUN composer run-script post-install-cmd
 ARG APP_ENV=prod
 ARG APP_SECRET=ChangeMe
 ARG DATABASE_URL="postgresql://app:app@127.0.0.1:5432/app?serverVersion=16&charset=utf8"
