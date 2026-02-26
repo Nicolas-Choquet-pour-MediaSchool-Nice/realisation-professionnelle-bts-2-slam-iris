@@ -22,7 +22,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	# Chargement des fixtures (si spécifié par LOAD_FIXTURES=true)
 	if [ "$LOAD_FIXTURES" = "true" ]; then
 		echo "Chargement des fixtures..."
-		php bin/console doctrine:fixtures:load --no-interaction
+		php bin/console doctrine:fixtures:load --purge-with-truncate --append
 	fi
 fi
 

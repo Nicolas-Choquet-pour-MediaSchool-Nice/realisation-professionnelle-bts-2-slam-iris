@@ -39,7 +39,7 @@ jobs:
               run: php bin/console doctrine:migration:migrate
 
             - name: fixtures
-              run: php bin/console doctrine:fixture:load
+              run: php bin/console doctrine:fixture:load --purge-with-truncate --append
 
             - name: Prepare artifacts
               run: |
