@@ -2,11 +2,7 @@ name: Build and Push Docker Image
 
 on:
     push:
-        branches: [ "main" ] # Déclenche le build lors d'un push sur main
-
-env:
-    REGISTRY: ghcr.io
-    REPOSITORY_NAME: nicolas-choquet-pour-mediaschool-nice/realisation-professionnelle-bts-2-slam-iris
+        branches: [ "main" ]
 
 jobs:
     build:
@@ -43,27 +39,18 @@ jobs:
             - name: Log in to the Container registry
               uses: docker/login-action@v3
               with:
-                  registry: ${{ env.REGISTRY }}
+                  registry: ghcr.io
                   username: ${{ github.actor }}
                   password: ${{ secrets.GH_PACKAGES_TOKEN }}
 
             - name: Build and push
               run: |
                   # On définit les variables en local dans le shell pour éviter les surprises
-                  REPO_OWNER=${{ github.repository_owner }} #$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-                  REPO_NAME=${{ github.event.repository.name }} #$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+                  REPO_OWNER=${{ github.repository_owner }}
+                  REPO_NAME=${{ github.event.repository.name }}
                   IMAGE_ID=ghcr.io/$REPO_OWNER/$REPO_NAME
 
                   echo "Build de l'image : $IMAGE_ID"
 
                   docker build . -t $IMAGE_ID:latest
                   docker push $IMAGE_ID:latest
-
-#            - name: Build and push Docker image
-#              uses: docker/build-push-action@v5
-#              with:
-#                  context: .
-#                  push: true
-#                  tags: |
-#                      ghcr.io/${{ env.REPOSITORY_NAME }}:latest
-#                      ghcr.io/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
