@@ -37,11 +37,12 @@ jobs:
               run: composer update --no-interaction --prefer-dist --optimize-autoloader
 
             - name: Log in to the Container registry
-              uses: docker/login-action@v3
-              with:
-                  registry: ghcr.io
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GH_PACKAGES_TOKEN }}
+              run: echo "${{ secrets.GH_PACKAGES_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+              #uses: docker/login-action@v3
+              #with:
+              #    registry: ghcr.io
+              #    username: ${{ github.actor }}
+              #    password: ${{ secrets.GH_PACKAGES_TOKEN }}
 
             - name: Build and push
               run: |
