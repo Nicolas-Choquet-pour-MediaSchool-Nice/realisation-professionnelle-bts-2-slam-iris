@@ -46,6 +46,7 @@ jobs:
                   mkdir -p artifact
 
                   cp -r `ls -A . | grep -vE "artifact"` artifact
+                  cp ./public/.htaccess artifact/public/.htaccess
                   cp ./.env artifact/.env
                   cp composer.json artifact/composer.json
                   if [ -f composer.lock ]; then cp composer.lock artifact/composer.lock; fi
