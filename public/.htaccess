@@ -9,7 +9,7 @@
     RewriteCond %{REQUEST_FILENAME} !-d
 
     # Sinon, on envoie tout à index.php
-    RewriteRule ^ index.php [QSA,L]
+    RewriteRule ^(.*) index.php [QSA,L]
 </IfModule>
 
 <IfModule !mod_rewrite.c>
