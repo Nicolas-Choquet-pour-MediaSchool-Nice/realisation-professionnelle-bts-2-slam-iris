@@ -95,12 +95,3 @@ jobs:
                   # Strip both the leading 'build' and 'artifact' directories
                   strip_components: 1
                   rm: true
-
-            - name: restart application
-              run: |
-                  err=$(curl -X POST --basic --user "${{secrets.ALWAYSDATA_TOKEN}} account=${{secrets.ALWAYSDATA_USER}}:" https://api.alwaysdata.com/v1/site/${{secrets.ALWAYSDATA_SITE_ID}}/restart/ &>2);
-                  if [[ "${err}" -eq "" ]]; then
-                    echo "Redémarrage OK"
-                  else
-                    echo "Erreur : ${err}"
-                  fi
