@@ -7,6 +7,7 @@ on:
 env:
     REGISTRY: ghcr.io
     IMAGE_NAME: ${{ github.repository }}
+    REPOSITORY_NAME: realisation-professionnelle-bts-2-slam-iris
 
 jobs:
     build:
@@ -23,7 +24,7 @@ jobs:
               run: |
                 # On convertit "Organisation/NomDuRepo" en "organisation/nomdurepo"
                 # C'est ce format exact qui est requis par ghcr.io
-                REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+                REPO_LOWER=$(echo "${{ env.REPOSITORY_NAME }}" | tr '[:upper:]' '[:lower:]')
                 echo "IMAGE_NAME=$REPO_LOWER" >> $GITHUB_ENV
 
             - name: Log in to the Container registry
