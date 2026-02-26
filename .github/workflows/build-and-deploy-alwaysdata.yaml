@@ -81,7 +81,7 @@ jobs:
 
             - name: Create .env from secret (optional)
               run: |
-                  echo "APP_ENV=prod" >> .env
+                  echo "APP_ENV=prod" >> build/.env
                   echo "APP_SECRET=$(openssl rand -hex 30)" >> build/.env
                   echo "APP_SHARE_DIR=var/share" >> build/.env
                   echo "DEFAULT_URI=https://bts-sio-slam-2.nicolas-choquet.fr" >> build/.env
