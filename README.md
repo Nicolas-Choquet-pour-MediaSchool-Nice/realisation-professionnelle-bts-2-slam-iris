@@ -16,50 +16,29 @@ symfony server:start
 
 ## Déploiement production avec Docker Compose
 
-1. Copier le fichier d'environnement dédié :
+1. L'envoie de l'image docker sur le registry GitHub est automatisé à chaque push sur `main`
+
+2. Copier le fichier d'environnement dédié :
     ```bash
-    cp .env.prod.docker .env.prod
+    cp .env.example .env.prod
     ```
 
-2. Modifier les valeurs sensibles dans `.env.prod` (`APP_SECRET`, `POSTGRES_PASSWORD`, etc.).
+3. Modifier les valeurs sensibles dans `.env.prod` (`DEFAULT_URI`, `DATABASE_URL`, `APP_SECRET`, etc.).
 
-3. Lancer la stack en production :
+4. Lancer la stack en production :
     ```bash
     docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build
     ```
 
-4. Vérifier les logs :
+5. Vérifier les logs :
     ```bash
     docker compose --env-file .env.prod -f docker-compose.prod.yml logs -f
     ```
 
-5. Arrêter la stack :
+6. Arrêter la stack :
     ```bash
     docker compose --env-file .env.prod -f docker-compose.prod.yml down
     ```
-
-### Envoi de l'image sur GitHub Packages (GHCR)
-
-Pour envoyer l'image sur le registre GitHub :
-
-1. **Connexion au registre** (nécessite un Personal Access Token avec les droits `write:packages`) :
-    ```bash
-    echo $CR_PAT | docker login ghcr.io -u VOTRE_NOM_UTILISATEUR --password-stdin
-    ```
-
-2. **Construction et Tagging** :
-    ```bash
-    docker build -t ghcr.io/nicolas-choquet-pour-mediaschool-nice/realisation-professionnelle-bts-2-slam-iris/app:latest .
-    ```
-
-3. **Push sur le registre** :
-    ```bash
-    docker push ghcr.io/nicolas-choquet-pour-mediaschool-nice/realisation-professionnelle-bts-2-slam-iris/app:latest
-    ```
-
-> Remplacez `VOTRE_NOM_UTILISATEUR` par votre identifiant GitHub.
-
-> Le conteneur `app` exécute automatiquement les migrations Doctrine au démarrage (désactivable avec `RUN_MIGRATIONS=0`).
 
 ## Diagrammes
 
