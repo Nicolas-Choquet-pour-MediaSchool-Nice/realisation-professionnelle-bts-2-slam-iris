@@ -45,7 +45,7 @@ jobs:
               run: |
                   mkdir -p artifact
 
-                  cp -r ./* artifact
+                  cp -r `ls -A . | grep -vE "artifact"` artifact
                   cp ./.env artifact/.env
                   cp composer.json artifact/composer.json
                   if [ -f composer.lock ]; then cp composer.lock artifact/composer.lock; fi
