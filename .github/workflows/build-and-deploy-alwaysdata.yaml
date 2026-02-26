@@ -43,12 +43,13 @@ jobs:
 
             - name: Prepare artifacts
               run: |
-                  mkdir -p ../artifact
-                  cp -r ./* ../artifact
-                  cp ./.env ../artifact/.env
-                  cp composer.json ../artifact/composer.json
-                  if [ -f composer.lock ]; then cp composer.lock ../artifact/composer.lock; fi
-                  cd ../artifact && composer update --no-interaction --prefer-dist --optimize-autoloader
+                  mkdir -p artifact
+
+                  cp -r ./* artifact
+                  cp ./.env artifact/.env
+                  cp composer.json artifact/composer.json
+                  if [ -f composer.lock ]; then cp composer.lock artifact/composer.lock; fi
+                  cd artifact && composer update --no-interaction --prefer-dist --optimize-autoloader
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
