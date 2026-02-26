@@ -64,11 +64,20 @@ jobs:
         runs-on: ubuntu-latest
         if: github.ref == 'refs/heads/main'
         steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
             - name: Download build artifact
               uses: actions/download-artifact@v4
               with:
                  name: build
                  path: build
+
+            - name: Copy .htaccess
+              run: cp public/.htaccess build/public/.htaccess
+
+            - name: Remove project
+              run: rm -rf `ls -A | grep -vE "build"`
 
             - name: Create .env from secret (optional)
               run: |
