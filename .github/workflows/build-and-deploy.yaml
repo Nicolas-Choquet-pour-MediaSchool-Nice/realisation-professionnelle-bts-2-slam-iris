@@ -50,8 +50,8 @@ jobs:
             - name: Build and push
               run: |
                   # On définit les variables en local dans le shell pour éviter les surprises
-                  REPO_OWNER=${{ github.repository_owner }}#$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-                  REPO_NAME=${{ github.event.repository.name }}#$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+                  REPO_OWNER=${{ github.repository_owner }} #$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+                  REPO_NAME=${{ github.event.repository.name }} #$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
                   IMAGE_ID=ghcr.io/$REPO_OWNER/$REPO_NAME
 
                   echo "Build de l'image : $IMAGE_ID"
