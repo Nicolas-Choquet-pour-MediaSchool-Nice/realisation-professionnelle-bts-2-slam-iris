@@ -1,0 +1,132 @@
+name: Build and Deploy AlwaysData
+
+on:
+    push:
+        branches: [ "main" ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup .env
+              run: |
+                  echo "APP_ENV=dev" >> .env
+                  echo "APP_SECRET=$(openssl rand -hex 30)" >> .env
+                  echo "APP_SHARE_DIR=var/share" >> .env
+                  echo "DEFAULT_URI=https://bts-sio-slam-2.nicolas-choquet.fr" >> .env
+                  echo "DATABASE_URL=postgresql://${{ secrets.PGSQL_USER }}:${{ secrets.PGSQL_PASSWORD }}@postgresql-nicolas-choquet.alwaysdata.net:5432/nicolas-choquet_bts-sio-2-2526?serverVersion=16&charset=utf8" >> .env
+                  echo "MAILER_DSN=null://null" >> .env
+                  echo "MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0" >> .env
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+               php-version: '8.4'
+               extensions: intl, pdo_pgsql, zip, opcache # Les mêmes que ton Dockerfile
+               coverage: none
+
+                      # 2. LANCER COMPOSER UPDATE (ou install)
+            - name: Update Composer dependencies
+              run: composer update --no-interaction --prefer-dist --optimize-autoloader
+
+            - name: migrations
+              run: php bin/console doctrine:migration:migrate
+
+            - name: fixtures
+              run: php bin/console doctrine:fixture:load
+
+            - name: Prepare artifacts
+              run: |
+                  mkdir -p ../artifact
+                  cp -r ./* ../artifact
+                  cp composer.json artifact/composer.json
+                  if [ -f composer.lock ]; then cp composer.lock artifact/composer.lock; fi
+                  cd artifact && composer update --no-interaction --prefer-dist --optimize-autoloader
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build
+                  path: artifact
+
+    deploy:
+        name: Deploy to AlwaysData (SSH)
+        needs: build
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/main'
+        steps:
+            - name: Download build artifact
+              uses: actions/download-artifact@v4
+              with:
+                 name: build
+                 path: build
+
+            - name: Create .env from secret (optional)
+              run: |
+                  echo "Creating .env from secret"
+
+                  echo "SMTP_HOST=${{secrets.SMTP_HOST}}" >> build/.env
+                  echo "SMTP_PORT=465" >> build/.env
+                  echo "SMTP_USER=${{secrets.SMTP_USER}}" >> build/.env
+                  echo "SMTP_PASS=${{secrets.SMTP_PASS}}" >> build/.env
+                  echo "SMTP_SECURE=true" >> build/.env
+                  echo "SMTP_FROM=${{secrets.MAIL_FROM}}" >> build/.env
+                  echo "APP_NAME=${{secrets.APP_NAME}}" >> build/.env
+
+                  echo "VITE_SUPPORT_EMAIL=${{secrets.SUPPORT_EMAIL}}" >> build/.env
+
+                  echo "DATABASE_URL=mysql://${{secrets.DB_USER}}:${{secrets.DB_PASS}}@${{secrets.DB_HOST}}:${{secrets.DB_PORT}}/${{secrets.DB_NAME}}" >> build/.env
+
+                  echo "JWT_SECRET=${{secrets.JWT_SECRET}}" >> build/.env
+
+            - name: Debug artifact contents
+              run: |
+                  echo "Listing downloaded artifact contents"
+                  ls -laR build || true
+
+            - name: Copy files to server (SCP)
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USER }}
+                  password: ${{ secrets.SSH_KEY }}
+                  port: ${{ secrets.SSH_PORT || 22 }}
+                  # Copy the built artifact folder contents
+                  source: build
+                  target: ${{ secrets.REMOTE_PATH }}
+                  # Strip both the leading 'build' and 'artifact' directories
+                  strip_components: 1
+                  rm: true
+
+            - name: Post-deploy remote commands (install + migrate)
+              uses: appleboy/ssh-action@v1.2.0
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USER }}
+                  password: ${{ secrets.SSH_KEY }}
+                  port: ${{ secrets.SSH_PORT || 22 }}
+                  script: |
+                      set -e
+                      cd ${{ secrets.REMOTE_PATH }}
+                      if command -v node >/dev/null 2>&1; then
+                        echo "Node version on server: $(node -v)"
+                      else
+                        echo "Warning: Node is not in PATH on the server. Ensure AlwaysData Node.js environment is enabled." >&2
+                      fi
+
+                      echo "Deployed to ${{ secrets.REMOTE_PATH }}"
+
+            - name: restart application
+              run: |
+                  err=$(curl -X POST --basic --user "${{secrets.ALWAYSDATA_TOKEN}} account=${{secrets.ALWAYSDATA_USER}}:" https://api.alwaysdata.com/v1/site/${{secrets.ALWAYSDATA_SITE_ID}}/restart/ &>2);
+                  if [[ "${err}" -eq "" ]]; then
+                    echo "Redémarrage OK"
+                  else
+                    echo "Erreur : ${err}"
+                  fi
