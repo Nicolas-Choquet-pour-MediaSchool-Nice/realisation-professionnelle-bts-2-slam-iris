@@ -96,24 +96,6 @@ jobs:
                   strip_components: 1
                   rm: true
 
-            - name: Post-deploy remote commands (install + migrate)
-              uses: appleboy/ssh-action@v1.2.0
-              with:
-                  host: ${{ secrets.SSH_HOST }}
-                  username: ${{ secrets.SSH_USER }}
-                  password: ${{ secrets.SSH_KEY }}
-                  port: ${{ secrets.SSH_PORT || 22 }}
-                  script: |
-                      set -e
-                      cd ${{ secrets.REMOTE_PATH }}
-                      if command -v node >/dev/null 2>&1; then
-                        echo "Node version on server: $(node -v)"
-                      else
-                        echo "Warning: Node is not in PATH on the server. Ensure AlwaysData Node.js environment is enabled." >&2
-                      fi
-
-                      echo "Deployed to ${{ secrets.REMOTE_PATH }}"
-
             - name: restart application
               run: |
                   err=$(curl -X POST --basic --user "${{secrets.ALWAYSDATA_TOKEN}} account=${{secrets.ALWAYSDATA_USER}}:" https://api.alwaysdata.com/v1/site/${{secrets.ALWAYSDATA_SITE_ID}}/restart/ &>2);
