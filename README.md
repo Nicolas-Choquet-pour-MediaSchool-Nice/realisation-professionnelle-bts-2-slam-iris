@@ -9,6 +9,7 @@ cd realisation-professionnelle-bts-2-slam-iris
 # remplire le fichier .env au moins avec l'url de connexion à la bdd
 composer install
 php bin/console doctrine:migration:migrate
+php bin/console doctrine:fixtures:load
 symfony server:start
 ```
 
