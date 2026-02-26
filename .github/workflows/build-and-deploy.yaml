@@ -19,10 +19,10 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            # ÉTAPE CRUCIALE : On passe le nom en minuscules
-            - name: Lowercase repo name
+            - name: Prepare Image Name
               run: |
-                echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+                # On prend le nom du repo, on le passe en minuscules, et on le stocke
+                echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
             - name: Log in to the Container registry
               uses: docker/login-action@v3
