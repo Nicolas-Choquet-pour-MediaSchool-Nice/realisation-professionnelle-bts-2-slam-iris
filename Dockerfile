@@ -47,7 +47,7 @@ ARG DATABASE_URL="postgresql://app:app@127.0.0.1:5432/app?serverVersion=16&chars
 
 # On installe les dépendances SANS les scripts pour l'instant
 # Cela permet de valider la version PHP avant de copier tout le code
-RUN composer install --prefer-dist --no-dev --no-progress --no-interaction
+RUN composer install --prefer-dist --no-progress --no-interaction
 
 RUN sync
 
