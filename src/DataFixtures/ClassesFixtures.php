@@ -10,13 +10,14 @@ class ClassesFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
+        $className = 'BTS SIO 2 IRIS SLAM';
 
-        $class = new SchoolClass();
-        $class->setName('BTS SIO 2 IRIS SLAM');
-        $manager->persist($class);
-
-        $manager->flush();
+        if (!$manager->getRepository(SchoolClass::class)
+            ->findOneBy(['name' => $className])) {
+            $class = new SchoolClass();
+            $class->setName($className);
+            $manager->persist($class);
+            $manager->flush();
+        }
     }
 }

@@ -14,16 +14,18 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserFixtures extends Fixture
 {
     public function __construct(
-        private readonly UserPasswordHasherInterface $hasher,
-        private UserRepository $userRepository
+        private readonly UserPasswordHasherInterface $hasher
     )
     {}
 
     public function load(ObjectManager $manager): void
     {
-        if (!$this->userRepository->findOneBy([
-            'email' => 'student@example.com'
-        ])) {
+        $studentMail = 'student@example.com';
+        $coordinatorMail = 'coordinator@example.com';
+        $adminMail = 'admin@example.com';
+
+        $userRepository = $manager->getRepository(User::class);
+        if (!$userRepository->findOneBy(['email' => $studentMail])) {
             // Création d'un étudiant
             $user = new User();
             $user->setEmail('student@example.com')
@@ -40,9 +42,7 @@ class UserFixtures extends Fixture
             $manager->persist($user);
         }
 
-        if (!$this->userRepository->findOneBy([
-            'email' => 'admin@example.com'
-        ])) {
+        if (!$userRepository->findOneBy(['email' => $adminMail])) {
             // Création d'un administrateur
             $user = new User();
             $user->setEmail('admin@example.com')
@@ -59,9 +59,7 @@ class UserFixtures extends Fixture
             $manager->persist($user);
         }
 
-        if (!$this->userRepository->findOneBy([
-            'email' => 'coordinator@example.com'
-        ])) {
+        if (!$userRepository->findOneBy(['email' => $coordinatorMail])) {
             // Création d'un corrdinateur
             $user = new User();
             $user->setEmail('coordinator@example.com')
