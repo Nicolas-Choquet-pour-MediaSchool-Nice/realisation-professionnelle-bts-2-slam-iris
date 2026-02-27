@@ -41,9 +41,6 @@ jobs:
             - name: fixtures
               run: php bin/console doctrine:fixture:load --purge-with-truncate --append
 
-            - name: Clear cache
-              run: php bin/console cache:clear --no-interaction
-
             - name: Prepare artifacts
               run: |
                   mkdir -p artifact
@@ -110,3 +107,14 @@ jobs:
                   # Strip both the leading 'build' and 'artifact' directories
                   strip_components: 1
                   rm: true
+
+            - name: Post-deployment SSH commands
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USER }}
+                  password: ${{ secrets.SSH_KEY }}
+                  port: ${{ secrets.SSH_PORT || 22 }}
+                  script: |
+                      cd ${{ secrets.REMOTE_PATH }}
+                      php bin/console cache:clear --no-interaction --env=prod || rm -rf var/cache/*
