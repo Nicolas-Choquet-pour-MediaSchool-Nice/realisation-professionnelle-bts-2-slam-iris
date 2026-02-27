@@ -1,7 +1,16 @@
 {{ form_start(form) }}
+    {% if form.vars.errors|length > 0 %}
+        <div class="flash-container">
+            <div class="alert alert-{{ label == 'error' ? 'danger' : label }}">
+                <span>{{ message }}</span>
+                <button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+            </div>
+        </div>
+    {% endif %}
+
     {{ form_row(form.firstname) }}
     {{ form_row(form.lastname) }}
     {{ form_row(form.email) }}
     {{ form_row(form.class) }}
-    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+    <button class="btn btn-primary mt-3">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}

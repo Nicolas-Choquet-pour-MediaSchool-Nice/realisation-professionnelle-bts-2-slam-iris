@@ -41,6 +41,9 @@ jobs:
             - name: fixtures
               run: php bin/console doctrine:fixture:load --purge-with-truncate --append
 
+            - name: Clear cache
+              run: php bin/console cache:clear --no-interaction
+
             - name: Prepare artifacts
               run: |
                   mkdir -p artifact
