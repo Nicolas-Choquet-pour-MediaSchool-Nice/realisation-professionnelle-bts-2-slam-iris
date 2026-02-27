@@ -1,0 +1,14 @@
+{% use 'form_div_layout.html.twig' %}
+
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <div class="alert alert-danger mb-2">
+            <div>
+                {% for error in errors %}
+                    <div class="error-item">{{ error.message }}</div>
+                {% endfor %}
+            </div>
+            <button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+        </div>
+    {% endif %}
+{% endblock form_errors %}
