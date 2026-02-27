@@ -284,19 +284,46 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                box-shadow: 0 2px 5px var(--card-shadow);
+                box-shadow: 0 4px 12px var(--card-shadow);
                 animation: slideIn 0.3s ease-out;
+                border-left: 5px solid transparent;
+                position: relative;
             }
 
             @keyframes slideIn {
-                from { transform: translateY(-10px); opacity: 0; }
+                from { transform: translateY(-20px); opacity: 0; }
                 to { transform: translateY(0); opacity: 1; }
             }
 
-            .alert-success { background-color: var(--badge-success-bg); border: 1px solid var(--success); color: var(--badge-success-text); }
-            .alert-danger { background-color: var(--badge-danger-bg); border: 1px solid var(--danger); color: var(--badge-danger-text); }
-            .alert-warning { background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; }
-            .alert-info { background-color: var(--badge-primary-bg); border: 1px solid var(--primary); color: var(--badge-primary-text); }
+            .alert-success {
+                background-color: var(--badge-success-bg);
+                border: 1px solid var(--success);
+                border-left-color: var(--success);
+                color: var(--badge-success-text);
+            }
+            .alert-danger {
+                background-color: var(--badge-danger-bg);
+                border: 1px solid var(--danger);
+                border-left-color: var(--danger);
+                color: var(--badge-danger-text);
+            }
+            .alert-warning {
+                background-color: #fff3cd;
+                border: 1px solid #ffeeba;
+                border-left-color: #856404;
+                color: #856404;
+            }
+            .alert-info {
+                background-color: var(--badge-primary-bg);
+                border: 1px solid var(--primary);
+                border-left-color: var(--primary);
+                color: var(--badge-primary-text);
+            }
+
+            .alert span {
+                flex-grow: 1;
+                font-weight: 500;
+            }
 
             .alert-close {
                 background: none;
