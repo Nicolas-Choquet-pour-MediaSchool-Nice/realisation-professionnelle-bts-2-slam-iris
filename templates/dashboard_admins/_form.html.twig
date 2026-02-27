@@ -1,10 +1,10 @@
 {{ form_start(form) }}
     {% if form.vars.errors|length > 0 %}
-        <div class="flash-container">
-            <div class="alert alert-{{ label == 'error' ? 'danger' : label }}">
-                <span>{{ message }}</span>
-                <button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>
-            </div>
+        <div class="alert alert-danger">
+            {% for error in form.vars.errors %}
+                <span>{{ error.message }}</span>
+            {% endfor %}
+            <button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>
         </div>
     {% endif %}
 

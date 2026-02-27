@@ -1,4 +1,13 @@
 {{ form_start(form) }}
+    {% if form.vars.errors|length > 0 %}
+        <div class="alert alert-danger">
+            {% for error in form.vars.errors %}
+                <span>{{ error.message }}</span>
+            {% endfor %}
+            <button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+        </div>
+    {% endif %}
+
     {{ form_widget(form) }}
     <button class="btn btn-primary mt-3">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}
