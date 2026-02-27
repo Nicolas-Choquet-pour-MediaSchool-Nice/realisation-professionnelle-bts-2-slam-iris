@@ -54,6 +54,19 @@ final class DashboardAdminsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $email = $form->get('email')->getData();
+            $existingUser = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+            if ($existingUser) {
+                $this->addFlash('error', 'Cet email est déjà utilisé.');
+                return $this->render('dashboard_admins/new.html.twig', [
+                    'admin' => $admin,
+                    'form' => $form,
+                    'isAdmin' => $isAdmin,
+                    'isCoordinator' => $isCoordinator,
+                    'user' => $connectedUser
+                ]);
+            }
+
             $user = new User();
             $user->setEmail($form->get('email')->getData());
             $user->setFirstname($form->get('firstname')->getData());
@@ -127,6 +140,20 @@ final class DashboardAdminsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $admin->getUser();
+            $email = $form->get('email')->getData();
+
+            $existingUser = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+            if ($existingUser && $existingUser->getId() !== $user->getId()) {
+                $this->addFlash('error', 'Cet email est déjà utilisé.');
+                return $this->render('dashboard_admins/edit.html.twig', [
+                    'admin' => $admin,
+                    'form' => $form,
+                    'isAdmin' => $isAdmin,
+                    'isCoordinator' => $isCoordinator,
+                    'user' => $connectedUser
+                ]);
+            }
+
             $user->setEmail($form->get('email')->getData());
             $user->setFirstname($form->get('firstname')->getData());
             $user->setLastname($form->get('lastname')->getData());

@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Repository\SchoolClassRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SchoolClassRepository::class)]
+#[UniqueEntity(fields: ['name'], message: 'Cette classe existe déjà.')]
 class SchoolClass
 {
     #[ORM\Id]

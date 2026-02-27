@@ -44,6 +44,18 @@ final class DashboardRoomsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $existingRoom = $entityManager->getRepository(Room::class)->findOneBy(['name' => $room->getName()]);
+            if ($existingRoom && $existingRoom->getId() !== $room->getId()) {
+                $this->addFlash('error', 'Cette salle existe déjà.');
+                return $this->render('dashboard_rooms/new.html.twig', [
+                    'room' => $room,
+                    'form' => $form,
+                    'isAdmin' => $isAdmin,
+                    'isCoordinator' => $isCoordinator,
+                    'user' => $user
+                ]);
+            }
+
             $entityManager->persist($room);
             $entityManager->flush();
 
@@ -91,6 +103,18 @@ final class DashboardRoomsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $existingRoom = $entityManager->getRepository(Room::class)->findOneBy(['name' => $room->getName()]);
+            if ($existingRoom && $existingRoom->getId() !== $room->getId()) {
+                $this->addFlash('error', 'Ce nom de salle est déjà utilisé.');
+                return $this->render('dashboard_rooms/edit.html.twig', [
+                    'room' => $room,
+                    'form' => $form,
+                    'isAdmin' => $isAdmin,
+                    'isCoordinator' => $isCoordinator,
+                    'user' => $user
+                ]);
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Salle mise à jour avec succès.');

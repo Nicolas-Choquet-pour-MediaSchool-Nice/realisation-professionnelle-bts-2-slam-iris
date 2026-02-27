@@ -44,6 +44,18 @@ final class DashboardEquipmentsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $existingEquipment = $entityManager->getRepository(Equipment::class)->findOneBy(['name' => $equipment->getName()]);
+            if ($existingEquipment && $existingEquipment->getId() !== $equipment->getId()) {
+                $this->addFlash('error', 'Cet équipement existe déjà.');
+                return $this->render('dashboard_equipments/new.html.twig', [
+                    'equipment' => $equipment,
+                    'form' => $form,
+                    'isAdmin' => $isAdmin,
+                    'isCoordinator' => $isCoordinator,
+                    'user' => $user
+                ]);
+            }
+
             $entityManager->persist($equipment);
             $entityManager->flush();
 
@@ -91,6 +103,18 @@ final class DashboardEquipmentsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $existingEquipment = $entityManager->getRepository(Equipment::class)->findOneBy(['name' => $equipment->getName()]);
+            if ($existingEquipment && $existingEquipment->getId() !== $equipment->getId()) {
+                $this->addFlash('error', 'Ce nom d\'équipement est déjà utilisé.');
+                return $this->render('dashboard_equipments/edit.html.twig', [
+                    'equipment' => $equipment,
+                    'form' => $form,
+                    'isAdmin' => $isAdmin,
+                    'isCoordinator' => $isCoordinator,
+                    'user' => $user
+                ]);
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Équipement mis à jour avec succès.');

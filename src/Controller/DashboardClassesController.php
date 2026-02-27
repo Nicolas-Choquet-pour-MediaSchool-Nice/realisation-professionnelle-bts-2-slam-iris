@@ -68,6 +68,18 @@ final class DashboardClassesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $existingClass = $entityManager->getRepository(SchoolClass::class)->findOneBy(['name' => $schoolClass->getName()]);
+            if ($existingClass && $existingClass->getId() !== $schoolClass->getId()) {
+                $this->addFlash('error', 'Cette classe existe déjà.');
+                return $this->render('dashboard_classes/new.html.twig', [
+                    'school_class' => $schoolClass,
+                    'form' => $form,
+                    'isAdmin' => $isAdmin,
+                    'isCoordinator' => $isCoordinator,
+                    'user' => $connectedUser,
+                ]);
+            }
+
             $entityManager->persist($schoolClass);
             $entityManager->flush();
 
@@ -127,6 +139,18 @@ final class DashboardClassesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $existingClass = $entityManager->getRepository(SchoolClass::class)->findOneBy(['name' => $schoolClass->getName()]);
+            if ($existingClass && $existingClass->getId() !== $schoolClass->getId()) {
+                $this->addFlash('error', 'Ce nom de classe est déjà utilisé.');
+                return $this->render('dashboard_classes/edit.html.twig', [
+                    'school_class' => $schoolClass,
+                    'form' => $form,
+                    'isAdmin' => $isAdmin,
+                    'isCoordinator' => $isCoordinator,
+                    'user' => $connectedUser,
+                ]);
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Classe modifiée avec succès.');
